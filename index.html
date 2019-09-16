@@ -1,0 +1,392 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1 user-scalable=0">
+
+  <title>Wellington's Hoods: Have your say!</title>
+  <meta name="description" content="Crowdsourcing neighbourhoods in Wellington City" />
+
+  <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.css" />
+  <!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.ie.css" />
+  <![endif]-->
+  <link rel="stylesheet" href="libs/leaflet.draw/leaflet.draw.css" />
+  <!--[if lte IE 8]><link rel="stylesheet" href="libsLeaflet.draw/leaflet.draw.ie.css" /><![endif]-->
+  <link rel="stylesheet" href="css/hoodstyles.css">
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <script>alert('This site may not work in your browser! OH NO!')</script>
+  <![endif]-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <style type="text/css">
+ 
+    #share-buttons img {
+    width: 35px;
+    padding: 5px;
+    border: 0;
+    box-shadow: 0;
+    display: inline;
+    }
+     
+    </style>
+</head>
+
+<body>
+  <!-- GENERAL MODAL****************************************************************-->
+<div id="generalModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+         <div class="modal-dialog">
+    <div class="modal-content">
+             <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Hey hey!</h3>
+      </div>
+            <div class="modal-body">
+            </div>
+        <div class="modal-footer">
+        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">OK</button>
+      </div>
+           </div>
+  </div>
+ </div>
+ 
+<!-- INFO MODAL****************************************************************-->
+<!-- 
+  <div id="aboutModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+         <div class="modal-dialog">
+    <div class="modal-content">
+             <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <style>
+          h4 {text-align:center;}
+        </style>
+        <img src="/img/vuw.png" alt="VUW Logo" width="300" height="100" class="center">
+        <h4 id="myModalLabel"><b>INFORMATION FOR PARTICIPANTS</b></h3>
+      </div>
+             <div class="modal-body-1" style="max-height: none; padding: 15px;">
+                <p>You are invited to take part in this research.  Please read this information before deciding whether or not to take part.  
+                    If you decide to participate, thank you.  If you decide not to participate, thank you for considering this request and close this page.</p>
+                  <p><b>Who am I?</b></p>
+                  <p>My name is Hayden Rickard and I am a Masters student in the Master’s in Geographic Information Science programme at Victoria University of Wellington. 
+                    This research project is for my thesis.</p>
+                  <p><b>What is the aim of this project?</b></p>
+                  <p>This project aims to gather information about Wellingtonian’s perception of their neighbourhood to research the level of access neighbourhoods have to community resources (e.g. doctors’ offices, school, parks). 
+                    Your participation will support this research by having you draw the boundary of your neighbourhood. 
+                    This research has been approved by the Victoria University of Wellington Human Ethics Committee (Reference Number: 0000027406).</p>
+                  <p><b>How can you help?</b></p>
+                  <p>If you currently live in a neighbourhood in the Wellington region I would like you to fill in this survey. 
+                    If you agree to take part, you will draw the boundary of your neighbourhood in Wellington, and mark its focal point. 
+                    The survey will then ask you questions about you and your neighbourhood. The survey will take roughly 5 minutes to complete.</p>
+                  <p><b>What will happen to the information you give?</b></p>
+                  <p>This research is anonymous. This means that nobody, including the researchers, will be aware of your identity. 
+                    By answering the survey, you are giving consent for us to use your responses in this research. Your answers will remain completely anonymous and unidentifiable. 
+                    Once you submit the survey, it will be impossible to retract your answer. Please do not include any personal identifiable information in your responses.</p>
+                  <p><b>What will the project produce?</b></p>
+                  <p>The information from my research will be used in my Master’s thesis, associated conference presentations, academic journal articles, and possible press releases.</p>
+                  <p><b>If you have any questions or problems, who can you contact?</b></p>
+                  <p><b>Student: </b>Hayden Rickard, <b>Email Address: </b> <a href="/cdn-cgi/l/email-protection#99b9f1f8e0fdfcf7b7ebf0faf2f8ebfdd9efeceeb7f8fab7f7e3"><span class="__cf_email__" data-cfemail="a3cbc2dac7c6cd8dd1cac0c8c2d1c7e3d5d6d48dc2c08dcdd9">[email&#160;protected]</span></a></p>
+                  <p><b>Supervisor: </b>Mairead de Roiste, <b>Role: </b>Programme Director, GIS, <b>School: </b>Geography, Environment, and Earth Sciences, <b>Phone: </b>04 463 6431, 
+                  <a href="/cdn-cgi/l/email-protection#e8c88589819a8d898cc68c8d9a87819b9c8da89e9d9fc6898bc68692"><span class="__cf_email__" data-cfemail="cca1ada5bea9ada8e2a8a9bea3a5bfb8a98cbab9bbe2adafe2a2b6">[email&#160;protected]</span></a></p>
+                  <p><b>Supervisor: </b>David O'Sullivan, <b>Role: </b>Professor, <b>School: </b>Geography, Environment, and Earth Sciences, <b>Phone: </b>04 463 6429, 
+                    <a href="/cdn-cgi/l/email-protection#3a1a5e5b4c535e1455494f5656534c5b547a4c4f4d145b59145440"><span class="__cf_email__" data-cfemail="fd999c8b9499d3928e889191948b9c93bd8b888ad39c9ed39387">[email&#160;protected]</span></a></p>
+                  <p><b>Humans Ethics Committee Information</b></p>
+                  <p>If you have any concerns about the ethical conduct of the research you may contact the Victoria University HEC Convenor: Dr Judith Loveridge. 
+                    Email <a href="/cdn-cgi/l/email-protection#6141090402211714164f00024f0f1b"><span class="__cf_email__" data-cfemail="29414c4a695f5c5e07484a074753">[email&#160;protected]</span></a> or telephone +64-4-463 6028.</p>
+      </div>
+        <div class="modal-footer">
+        //button class="btn" id="modalInfoBtn">More Info Here</button
+        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">OK, I agree</button>
+      </div>
+           </div>
+  </div>
+ </div> -->
+<!--END MODAL-->
+
+<!-- SUBMIT MODAL ***********************************************************************-->
+<div id="submitModal"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+  <h3 id="myModalLabel"> Please enter your community groups name and the name of this wetland here: </h3>
+</div>
+<div class="modal-body-1" style="max-height: none; padding: 20px;">
+  <form class="form-horizontal" style="margin-bottom:0px" id="test-form"> 
+    <div id="alertHolder2"></div> 
+    <!--NEIGHBOURHOOD NAME-->
+    <div class="form-group">
+      <label for="hoodName" class="col-xs-4 control-label">Community group name: <br><span style="color:#FF0000;font-weight:normal;font-style:italic;">*Required</span></label>
+      <div class="col-xs-8">
+        <input class="form-control typeahead noEnterSubmit hoodName" id="hoodName" autocomplete="off" data-provide="typeahead">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="wetlandName" class="col-xs-4 control-label"> Wetland name: <br><span style="color:#FF0000;font-weight:normal;font-style:italic;">*Required</span></label>
+      <div class="col-xs-8">
+        <input class="form-control typeahead noEnterSubmit wetlandName" id="wetlandName" autocomplete="off" data-provide="typeahead">
+      </div>
+    </div>
+
+    <!--AGE-->
+    <!-- <div class="form-group"> 
+      <label class="col-xs-4 control-label">How old are you?<br><span style="color:#FF0000;font-weight:normal;font-style:italic;">*Required</span></label>
+        <select name="age" class="btn-group age-group" id="optionAge">
+          <option value="0to5">0 - 5</option>
+          <option value="6to10">6 - 10</option>
+          <option value="11to15">11 - 15</option>
+          <option value="16to20">16 - 20</option>
+          <option value="21to30">21 - 30</option>
+          <option value="31to40">31 - 40</option>
+          <option value="41to50">41 - 50</option>
+          <option value="51to60">51 - 60</option>
+          <option value="61to70">61 - 70</option>
+          <option value="70+">Over 70</option>
+        </select>
+    </div>  -->
+    <!--GENDER--> 
+    <!-- <div class="form group">
+      <label   class="col-xs-4 control-label" >What gender do you identify as?<br><span style="color:#FF0000;font-weight:normal;font-style:italic;">*Required</span></label>
+        <div id="gender" class="btn-group gnd-group col-xs-8">
+          <button type="button" class="btn btn-default" name="Male">Male</button>
+          <button type="button" class="btn btn-default" name="Female">Female</button>
+          <button type="button" class="btn btn-default" name="Other">Other, please specify:
+            <input type="text" name="Other-text" size="14">
+          </button>
+        </div>
+    </div>
+    <div>
+    <p>.</p>
+    </div> -->
+    <!--YEARS IN NEIGHBOURHOOD-->
+    <!-- <div class="form-group"> 
+      <label   class="col-xs-4 control-label" >How many years have you lived in this neighbourhood?<br><span style="color:#FF0000;font-weight:normal;font-style:italic;">*Required</span></label>
+        <div id="neighbourhoodLivingGroup" class="btn-group nbr-group col-xs-8">
+          <button type="button" class="btn btn-default" name="zero">None</button>
+          <button type="button" class="btn btn-default" name="-1">Less than 1</button>
+          <button type="button" class="btn btn-default" name="1to5">1 - 5</button>
+          <button type="button" class="btn btn-default" name="6to10">6 - 10</button>
+          <button type="button" class="btn btn-default" name="10+">10 or more</button>
+        </div>
+    </div> -->
+    <!--CHILDREN-->
+    <!-- <div class="form-group"> 
+      <label  class="col-xs-4 control-label">Do you have children?</label>
+        <div id="children" class="btn-group children-group col-xs-8">
+          <button type="button" onclick="child_yes()" class="btn btn-default" id="children_yes" name="Yes">Yes</button>
+          <button type="button" onclick="child_no()" class="btn btn-default" id="children_no" name="No">No</button>
+        </div>
+        <div class="form-group" id="atHome" style="display:none">
+          <label class="col-xs-4 control-label">Do they live in your household?</label>
+            <div id="childrenhome" class="btn-group childrenhome-group col-xs-8">
+              <button type="button" onclick="athome_yes()" class="btn btn-default " id="home_yes" name="Yes">Yes</button>
+              <button type="button" onclick="athome_no()"class="btn btn-default" id="home_no" name="No">No</button>
+            </div>
+        </div>
+        <div class="form-group" id="school" style="display:none">
+          <label class="col-xs-4 control-label">What level of school do they attend?</label>
+            <div id="childrenschool" class="btn-group childrenschool-group col-xs-8">
+              <label class="btn-secondary active">
+              <input type="checkbox" id="preschool" name="preschool">Preschool</button>
+              </label>
+              <label class="btn-secondary active">
+              <input type="checkbox" id="primary" name="primary">Primary</button>
+              </label>
+              <label class="btn-secondary active">
+              <input type="checkbox" id="intermediate" name="intermediate">Intermediate</button>
+              </label>
+              <label class="btn-secondary active">
+              <input type="checkbox" id="secondary" name="secondary">Secondary</button>
+              </label>
+              <label class="btn-secondary active">
+              <input type="checkbox" id="post" name="post">Post Secondary</button>
+              </label> 
+            </div>
+        </div>
+    </div>  -->
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    
+    <script>
+        function child_yes() {
+          document.getElementById("atHome").style.display = "inline"
+        }
+
+        function child_no() {
+          document.getElementById("atHome").style.display = "none"
+          document.getElementById("school").style.display = "none"
+        }
+
+        function athome_yes() {
+          document.getElementById("school").style.display = "inline"
+        }
+        
+        function athome_no() {
+          document.getElementById("school").style.display = "none"
+        }
+    </script>
+
+    <!--CAR ACCESS-->
+    <!-- <div class="form-group"> 
+      <label  class="col-xs-4 control-label" >Do you have access to a car?</label>
+        <div id="caraccess" class="btn-group caraccess-group col-xs-8">
+          <button type="button" onclick="caraccess_yes()" class="btn btn-default" name="Yes">Yes</button>
+          <button type="button" onclick="caraccess_no()" class="btn btn-default" name="No">No</button>
+        </div>
+        <div>
+          <p></p>
+        </div>
+        <div class="form-group" id="canDrive" style="display:none">
+          <label class="col-xs-4 control-label">Can you drive it?</label>
+            <div id="candrive" class="btn-group candrive-group col-xs-8">
+              <button type="button" class="btn btn-default " name="Yes">Yes</button>
+              <button type="button" class="btn btn-default"  name="No">No</button>
+            </div>
+        </div>  
+    </div> -->
+
+    <script>
+      function caraccess_yes(){
+        document.getElementById("canDrive").style.display = "inline"
+      }
+      function caraccess_no(){
+        document.getElementById("canDrive").style.display = "none"
+      }
+    </script>
+
+
+    <!--TRANSPORT-->
+    <div style="display: none" class="form-group">
+      <label class="col-xs-8 control-label">In an average week, how many days do you use the following modes of transport?</label>
+      <div class="form-group">
+        <label class="col-xs-6 control-label"></label>
+      </div>
+      <div class="form-group"> <!--CAR-->
+        <label class="col-xs-4 control-label">Car</label>
+          <div id="carGrp" class="btn-group car-group col-xs-8">
+            <button type="button" class="btn btn-default" name="zero">None</button>
+            <button type="button" class="btn btn-default" name="one">1 Day</button>
+            <button type="button" class="btn btn-default" name="2to3">2 - 3 Days</button>
+            <button type="button" class="btn btn-default" name="4to5">4 - 5 Days</button>
+            <button type="button" class="btn btn-default" name="Daily">Daily</button>
+          </div>
+      </div>
+      <div class="form-group"> <!--PUBLIC TRANSPORT-->
+        <label class="col-xs-4 control-label">Public Transport e.g. Bus, Train, Ferry</label>
+          <div id="publicGrp" class="btn-group public-group col-xs-8">
+            <button type="button" class="btn btn-default" name="zero">None</button>
+            <button type="button" class="btn btn-default" name="one">1 Day</button>
+            <button type="button" class="btn btn-default" name="2to3">2 - 3 Days</button>
+            <button type="button" class="btn btn-default" name="4to5">4 - 5 Days</button>
+            <button type="button" class="btn btn-default" name="Daily">Daily</button>
+          </div>
+      </div>
+      <div class="form-group"> <!--CYCLE-->
+        <label class="col-xs-4 control-label">Cycle</label>
+          <div id="cycleGrp" class="btn-group cycle-group col-xs-8">
+            <button type="button" class="btn btn-default" name="zero">None</button>
+            <button type="button" class="btn btn-default" name="one">1 Day</button>
+            <button type="button" class="btn btn-default" name="2to3">2 - 3 Days</button>
+            <button type="button" class="btn btn-default" name="4to5">4 - 5 Days</button>
+            <button type="button" class="btn btn-default" name="Daily">Daily</button>
+          </div>
+      </div>
+      <div class="form-group"> <!--WALK -->
+        <label class="col-xs-4 control-label">Walk</label>
+          <div id="walkGrp" class="btn-group walk-group col-xs-8">
+            <button type="button" class="btn btn-default" name="zero">None</button>
+            <button type="button" class="btn btn-default" name="one">1 Day</button>
+            <button type="button" class="btn btn-default" name="2to3">2 - 3 Days</button>
+            <button type="button" class="btn btn-default" name="4to5">4 - 5 Days</button>
+            <button type="button" class="btn btn-default" name="Daily">Daily</button>
+          </div>
+      </div>
+    </div>
+
+    
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+  <button type="submit" id="addWetlandBtn" class="btn"> Add another Wetland </button>
+  <button type="submit" id="allSubmitBtn" class="btn btn-success"> Save and Complete </button>
+</div> 
+</div>
+</div>
+</div>
+<!--END MODAL-->
+
+<!--THANKS MODAL-->
+<div id="thanksModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <style>
+          h4 {text-align:center;}
+        </style>
+        <h3 id="myModalLabel">Done! Thank you for your submission. </h3>
+      </div>
+      
+      <div style="padding:20px; font-size:1.2em;">
+        <p> Thank you for participating in the survey. We greatly appreciate your time and input. </p>
+        <p> The data collected up to now is associated with your community group.  Your name and contact details will not be shared. </p>      
+        <p> If you would like to contact the researcher in charge of this project, please email shannon.bentley@vuw.ac.nz. </p>
+        <br>
+        <p style="margin-bottom: 0.3em"> Ngā mihi nui, <br> Shannon Bentley </p> 
+        <p> Victoria University of Wellington </p>
+      </div>
+
+      <img src="/img/vuw.png" alt="VUW Logo" width="300" height="100" class="center">
+
+      
+      <div class="modal-body-1" style="max-height: none; padding: 0px;"> </div>
+
+      <div class="modal-footer">
+        <button id="thanksBtn" class="btn btn-default" data-dismiss="modal" aria-hidden="true">OK</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!--END MODAL-->
+
+<div id="map"></div>
+
+<div style="position:absolute; top: 80px; left: 30px; z-index:999;pointer-events:none">
+  <div  id="btnBar" class="noMouse">
+    <button id="startPolyBtn" class="btn btn-default yesMouse" type="button"> <i class="glyphicon glyphicon-pencil icon-white"> </i> Draw your Wetland! </button>
+    <button id="deletePolyBtn" style:""  class="btn btn-default  yesMouse" type="button"> <i class="glyphicon glyphicon-trash icon-white"> </i> Cancel</button>
+    <button id="deleteCenterBtn" style:""  class="btn btn-default  yesMouse" type="button"> <i class="glyphicon glyphicon-trash icon-white"> </i> Cancel</button>
+    <button id="submitPolyBtn" style="display:none;" class="btn btn-default btn-success  yesMouse" type="button">Save Boundary</button>
+    <button id="submitCenterBtn" style="display:none;" class="btn btn-default btn-success yesMouse" type="button">Save Focal Point</button>
+  </div>
+</div>
+
+<div class="noMouse" style="position:absolute; top: 80px; left: 20px; z-index:999;pointer-events:none;min-width:300px;">
+  <div id="resultBar" class="noMouse viewMap" style="display:none;">
+    <button id="resultsInSpace" class="btn  btn-default details spaceBtn yesMouse" type="button" data-toggle="button" >Show/Hide Base Map</button>
+  </div>
+</div>
+
+<a style="top:65px;right:45px;" class="link-icons enableTooltipsLeft" title="Information" href="#aboutModal" data-toggle="modal"><i class="glyphicon glyphicon-info-sign"></i></a>
+
+<div id="navDiv" class="navbar navbar-inverse navbar-fixed-top"></div>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="libs/bootstrap/js/bootstrap.min.js"></script>
+  <script src="https://libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
+  <script src="js/jquery.slimscroll.min.js"></script>
+  <script src="bower_components/d3/d3.min.js"></script>
+  <script type="text/javascript" src="bower_components/evispa-timo-jsclipper/clipper.js"></script>
+  <script type="text/javascript" src="bower_components/graham_scan/graham_scan.min.js"></script>
+  <script type="text/javascript" src="bower_components/concavehull/dist/concavehull.min.js"></script>
+    <script src="bower_components/leaflet.freedraw/dist/leaflet.freedraw-src.js"></script>
+     <script src="libs/Leaflet.Editable.js"></script>
+  <script src="js/hood.js"></script>
+  </script>
+</body>
+</html>
