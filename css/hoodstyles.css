@@ -9,6 +9,11 @@
 .leaflet-top {
     top: 50px;
 }
+
+img{
+  width: 100%;
+}
+
 .leaflet-draw-guide-dash {
 	font-size: 1%;
 	opacity: 1;

@@ -157,7 +157,7 @@ carto_apikey = "" // Enter Carto API key here.
     
     //add listeners------------------------------------------------------------------------------------------------------LIsteners Y'All!
     $('#aboutModal').modal('show').on('hidden.bs.modal',function(){
-    showInstructions();
+      showInstructions();
     })
 
     $("#resultMapBtn").click(function(e){ });
@@ -612,10 +612,22 @@ carto_apikey = "" // Enter Carto API key here.
   function showInstructions(){
     if ( instructed.poly && instructed.point ) return;
     var action = L.Browser.touch ? 'tap' : 'click';
-    var title = 'Draw your Wetland!',
+    var title = 'Find your wetland',
       text = 'To get started, zoom to your area of interest, then ' + action + ' the <b>Draw your Wetland </b> button in the <b>top left</b> of your screen. You can also change the interactive map of Wairarapa by clicking on the <b>Layers Icon</b> (beneath the + and - icons).'
       src = 'img/new_instructions_1.gif';
-    showAlert( title, text, src );
+    // showAlert( title, text, src, "Next >> ", showLayerInstructions, 'To change the map type, select either "Arial Imagery" or "Street Map" from the map options on the right side.', 'img/new_instructions_1_5.gif');
+    showAlert( title, text, src, "Next >> ", showLayerInstructions);
+  }
+
+  function showLayerInstructions(){
+    if (instructed.showLayerInstructions) { return }
+    instructed.showLayerInstructions = true;
+    console.log("Hello")
+    var action = L.Browser.touch ? 'tap' : 'click';
+    var title = 'Change the map view.'
+    let text = 'To change the map type, select either "Arial Imagery" or "Street Map" from the map options on the right side.'
+    let src = 'img/new_instructions_1_5.gif';
+    showAlert( title, text, src);
   }
 
   function showDrawingInstructions(){
@@ -675,7 +687,7 @@ carto_apikey = "" // Enter Carto API key here.
     }
   }
   
-  function showAlert( title, text, imageSrc, buttonLabel ){
+  function showAlert( title, text, imageSrc, buttonLabel, onclick,  text2, imageSrc2){
     var m = $("#generalModal");
     $('.modal-body', m).empty();
   
@@ -690,10 +702,24 @@ carto_apikey = "" // Enter Carto API key here.
     $('<p>')
       .html(text)
       .appendTo( $('.modal-body', m) );
+
+    if ( imageSrc2 ){
+      $('<div class="img-container">')
+        .html('<img src="'+imageSrc+'">')
+        .appendTo( $('.modal-body', m) );
+    }
+  
+    $('<p>')
+      .html(text2)
+      .appendTo( $('.modal-body', m) );
   
     buttonLabel = buttonLabel || 'OK';
     $('.btn-default',m).html(buttonLabel);
-  
+
+    if (onclick){
+      $('.btn-default').click((e) => setTimeout(onclick, 800));
+    }
+    
     m.modal('show');
   }
   
