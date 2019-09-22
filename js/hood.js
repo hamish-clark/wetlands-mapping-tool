@@ -4,13 +4,17 @@
 var myCities = [  //NAME AND BOUNDS OF CITIES 
     {name:"Wellington",bnds:[[-41.253351,174.713348],[-41.356514,174.846820]]}
   ]
-  ,tblName = "" // cartoDB table name
-  ,usrName = "" // your cartoDB username
+
+carto_table_name = "wetlands" // cartoDB table name
+carto_username = "bentleyshannon" // your cartoDB username
+
+carto_apikey = "" // Enter Carto API key here.
+
   ,brandText = "Welly's Neighbourhoods: Have your say!" // top left text and link on site
   ,brandLink = "https://www.wellyhoods.com" //top left link on site
   ,giturl = "https://github.com/hamish-clark/wetlands-mapping-tool" //Only change this if you want to link to a fork you made, otherwise you can leave the link to the original repo
   ,twiturl = "" //Links to my twit acct, change it if you want or remove twitter link altogether
-  ,myPath = ""; //this is the root path to your 2 instance with the v2 api param
+  
   /*---------------------------
   ----- Application Vars -------------
   ---------------------------*/
@@ -24,7 +28,7 @@ var myCities = [  //NAME AND BOUNDS OF CITIES
   ,lg = new L.layerGroup()
   ,overlg = new L.layerGroup()
   ,getJSON = {abort: function () {}}
-  ,downloadURL = myPath+"/sql?format=shp&q=select+*+from+"+tblName
+  
   ,ajaxrunning = false
   ,flagIndex = null
   ,poly
@@ -79,8 +83,6 @@ var myCities = [  //NAME AND BOUNDS OF CITIES
   ----- $(window).load -------
   ---------------------------*/
   function go(){
-
-
 
     $( 'body' ).attr('class','make');
     $('#deletePolyBtn').hide();
@@ -384,7 +386,9 @@ var myCities = [  //NAME AND BOUNDS OF CITIES
         return false;
       }; 
 
-      currentHood = document.getElementById('hoodName').value;
+      let communityGroup = document.getElementById('hoodName').value;
+      let wetlandName = document.getElementById('wetlandName').value;
+
       //participantAge = document.getElementById('optionAge').value;
       document.getElementById('hoodName').value = '';
       document.getElementById('wetlandName').value = '';
@@ -406,6 +410,8 @@ var myCities = [  //NAME AND BOUNDS OF CITIES
       $(".walk-group > button.btn").removeClass('active');
 
 
+      hoodCoords = ''
+
       var a = poly.getLatLngs();
         for (var i = 0; i < a.length; i++) {
           var lat = (a[i].lat);//.toFixed(4); // rid of rounding that was there for url length issue during dev
@@ -420,7 +426,7 @@ var myCities = [  //NAME AND BOUNDS OF CITIES
 
       poly
         .setStyle({color:'#03f',fillColor:'#03f',weight:2,fillOpacity:.1})
-        .bindPopup(currentHood)
+        .bindPopup(communityGroup)
         .disableEdit();
       poly = undefined;
 
@@ -435,8 +441,26 @@ var myCities = [  //NAME AND BOUNDS OF CITIES
       drawnItems.eachLayer(function(l){
         if ( l.setStyle ) l.setStyle({clickable:false});
       });
-
       $('#submitPolyBtn').hide();
+
+      let timeStamp =  new Date().getTime();
+      
+      console.log(wetlandName)
+      console.log(communityGroup)
+      console.log(hoodCoords)
+      console.log(timeStamp)
+
+      // let sql_query = `SELECT * FROM ${carto_table_name}`;
+      let sql_query = `INSERT INTO ${carto_table_name} (point_array_string, wetland_name, group_name, timestamp) VALUES ('${hoodCoords}', '${wetlandName}', '${communityGroup}', '${timeStamp}');`;
+      
+      // sql_query = `SELECT * FROM ${carto_table_name};`
+
+      let url = `https://${carto_username}.carto.com/api/v2/sql?q=${sql_query}&api_key=${carto_apikey}`
+      console.log(url);
+
+      fetch(url, {mode : 'no-cors'})
+        // .then( (response) => { console.log(response); return response.json(); })
+        // .then( (json) => { console.log(json); })
 
       return true; // Succesfully added a wetland
 
@@ -444,6 +468,8 @@ var myCities = [  //NAME AND BOUNDS OF CITIES
 
     $("#addWetlandBtn").click(function(e){
       add_wetland();
+
+
     });
 
     $("#allSubmitBtn").click(function(e){
@@ -453,7 +479,7 @@ var myCities = [  //NAME AND BOUNDS OF CITIES
     });
 
     $("#thanksBtn").click(function(e){
-      document.getElementById('emailInput').value = '';
+      
       $("#thanksModal").modal('hide');
     });  
   

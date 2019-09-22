@@ -198,7 +198,6 @@ a:hover {
 .spaceBtn:active{
 	background-color:hsl( #000);
 };
-
 .twitter-typeahead .tt-query,
 .twitter-typeahead .tt-hint {
 	margin-bottom: 0;
