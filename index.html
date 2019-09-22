@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1 user-scalable=0">
 
-  <title>Wellington's Hoods: Have your say!</title>
+  <title> Map your Community Groups Wetland </title>
   <meta name="description" content="Crowdsourcing neighbourhoods in Wellington City" />
 
   <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css" />
@@ -13,7 +13,7 @@
   <!--[if lte IE 8]>
     <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/themes/css/cartodb.ie.css" />
   <![endif]-->
-  <link rel="stylesheet" href="libs/leaflet.draw/leaflet.draw.css" />
+  <link rel="stylesheet" href="libs/leaflet.draw/leaflet.draw.css" type="text/css" />
   <!--[if lte IE 8]><link rel="stylesheet" href="libsLeaflet.draw/leaflet.draw.ie.css" /><![endif]-->
   <link rel="stylesheet" href="css/hoodstyles.css">
   <!--[if lt IE 9]>
@@ -332,14 +332,18 @@
       
       <div style="padding:20px; font-size:1.2em;">
         <p> Thank you for participating in the survey. We greatly appreciate your time and input. </p>
-        <p> The data collected up to now is associated with your community group.  Your name and contact details will not be shared. </p>      
         <p> If you would like to contact the researcher in charge of this project, please email shannon.bentley@vuw.ac.nz. </p>
+        <p> Alternatively, if you would like to contact the supervisor in charge of this project then please email Mairead de Roiste on <u> mairead.deroiste@vuw.ac.nz </u> or call her on: <u> 04 463 6431</u>
+        </p>
+
+        <p> Please close the window and you will be automatically exited from the survey. </p>
+
         <br>
         <p style="margin-bottom: 0.3em"> Ngā mihi nui, <br> Shannon Bentley </p> 
         <p> Victoria University of Wellington </p>
       </div>
 
-      <img src="/img/vuw.png" alt="VUW Logo" width="300" height="100" class="center">
+      <img src="/img/vuw.png" alt="VUW Logo" width="300" height="100" class="center-img">
 
       
       <div class="modal-body-1" style="max-height: none; padding: 0px;"> </div>
@@ -359,7 +363,7 @@
   <div  id="btnBar" class="noMouse">
     <button id="startPolyBtn" class="btn btn-default yesMouse" type="button"> <i class="glyphicon glyphicon-pencil icon-white"> </i> Draw your Wetland! </button>
     <button id="deletePolyBtn" style:""  class="btn btn-default  yesMouse" type="button"> <i class="glyphicon glyphicon-trash icon-white"> </i> Cancel</button>
-    <button id="deleteCenterBtn" style:""  class="btn btn-default  yesMouse" type="button"> <i class="glyphicon glyphicon-trash icon-white"> </i> Cancel</button>
+    <!-- <button id="deleteCenterBtn" style:""  class="btn btn-default  yesMouse" type="button"> <i class="glyphicon glyphicon-trash icon-white"> </i> Cancel</button> -->
     <button id="submitPolyBtn" style="display:none;" class="btn btn-default btn-success  yesMouse" type="button">Save Boundary</button>
     <button id="submitCenterBtn" style="display:none;" class="btn btn-default btn-success yesMouse" type="button">Save Focal Point</button>
   </div>
@@ -373,7 +377,9 @@
 
 <a style="top:65px;right:45px;" class="link-icons enableTooltipsLeft" title="Information" href="#aboutModal" data-toggle="modal"><i class="glyphicon glyphicon-info-sign"></i></a>
 
-<div id="navDiv" class="navbar navbar-inverse navbar-fixed-top"></div>
+<div id="navDiv" class="navbar navbar-inverse navbar-fixed-top">
+  <h1 class="nav-title"> Map your Wetland </h1>
+</div>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>

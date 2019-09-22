@@ -8,7 +8,7 @@ var myCities = [  //NAME AND BOUNDS OF CITIES
   ,usrName = "" // your cartoDB username
   ,brandText = "Welly's Neighbourhoods: Have your say!" // top left text and link on site
   ,brandLink = "https://www.wellyhoods.com" //top left link on site
-  ,giturl = "" //Only change this if you want to link to a fork you made, otherwise you can leave the link to the original repo
+  ,giturl = "https://github.com/hamish-clark/wetlands-mapping-tool" //Only change this if you want to link to a fork you made, otherwise you can leave the link to the original repo
   ,twiturl = "" //Links to my twit acct, change it if you want or remove twitter link altogether
   ,myPath = ""; //this is the root path to your 2 instance with the v2 api param
   /*---------------------------
@@ -57,15 +57,21 @@ var myCities = [  //NAME AND BOUNDS OF CITIES
   //,fillArr = ['#8DD3C7','#FFED6F','#BEBADA','#FB8072','#80B1D3','#FDB462','#B3DE69','#FCCDE5','#D9D9D9','#BC80BD','#CCEBC5','#FFFFB3']
   //fill array from tools.medialab.sciences-po.fr/iwanthue/index.php
   ,fillArr = ["#E7C265","#8AD4E2","#ECACC1","#95D18F","#E9D5B3","#E1EF7E","#F69D92","#9CD7BF","#B2BD75","#D1D3CF","#DAC1E1","#B3C69F","#D1AB6D","#E9D898","#B0CBE6","#D9B5AB","#86E9E1","#DBEA97","#D1F1E4","#DDEBBB","#DFB991","#F3AD8E","#8CDEB5","#EDAF69","#B9F2A6","#8DC8C4","#C2E887","#E5D670","#EAD483","#C4BF6A"]
+
   ,toner = L.tileLayer('https://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png', {
       attribution: '<a href="https://stamen.com/" target="_blank" >Stamen</a> | &copy; <a href="http://openstreetmap.org/" target="_blank" >OpenStreetMap</a> contributors'
   })
-  ,sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+
+  sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    zIndex: 50
   })
-  ,mapb = L.tileLayer('https://api.mapbox.com/styles/v1/rickarhayd1910/cjw7aiame4jon1cpif3ajqspp/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoicmlja2FyaGF5ZDE5MTAiLCJhIjoiY2p3NzV3OW0zMjg0dzQ5cHN3cHA0OTEwbiJ9.FNRLdU0b4MtTA_W5eo5ltQ', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+
+  mapb = L.tileLayer('https://api.mapbox.com/styles/v1/rickarhayd1910/cjw7aiame4jon1cpif3ajqspp/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1Ijoicmlja2FyaGF5ZDE5MTAiLCJhIjoiY2p3NzV3OW0zMjg0dzQ5cHN3cHA0OTEwbiJ9.FNRLdU0b4MtTA_W5eo5ltQ', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>', zIndex: 10
   })
+
+  label_layer = L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {zIndex : 100})
 
   ,instructed={};
   
@@ -73,15 +79,20 @@ var myCities = [  //NAME AND BOUNDS OF CITIES
   ----- $(window).load -------
   ---------------------------*/
   function go(){
+
+
+
     $( 'body' ).attr('class','make');
     $('#deletePolyBtn').hide();
     $('#submitPolyBtn').hide();
     $('.modal-body').css( 'max-height', window.innerHeight - 180 );
+
     map = new L.Map('map', {
       zoomControl:false,
       center: [0,0],
       zoom: 10.74,
       editable: true,
+      layers: [label_layer, sat]
     });
 
     // map.on("zoomend", (e) => {
@@ -96,26 +107,38 @@ var myCities = [  //NAME AND BOUNDS OF CITIES
     //   }
     // })
 
-        // map.on("baselayerchange", (e) => {
-    //   sat.setOpacity(1);
-    //   sat.addTo(map);
-    //   mapb.addTo(map);
-    // });
+    map.on("baselayerchange", (e) => {
+      let navDiv = document.getElementById("navDiv")
+      navDiv.classList.toggle("navbar-inverse");
+      if (e.name === "Street map"){
+        label_layer.setOpacity(0);
+      }else{
+        label_layer.setOpacity(1);
+      }
+    });
+
+
+    //https://www.arcgis.com/home/item.html?id=413fd05bbd7342f5991d5ec96f4f8b18
+
 
     var baseMaps = {
-      "Community":mapb,
-      "Aerial Imagery": sat
+      "Aerial Imagery": sat,
+      "Street map":mapb
     };
+    
+    
+    let l =  L.control.layers(baseMaps, {}, {collapsed:false, "autoZIndex":true})
+    
+    label_layer.addTo(map)
 
     c.addTo(map);
-    let l =  L.control.layers(baseMaps, {}, {"autoZIndex":true}).addTo(map);
-
-
+    l.addTo(map);
+    
     lg.addTo(map);
+
     overlg.addTo(map);
 
-    mapb.addTo(map);
-
+    
     //map.fitBounds(selectedCity.bnds);
     map.setView([-41.0797201, 175.4799973],11)
   
@@ -129,12 +152,6 @@ var myCities = [  //NAME AND BOUNDS OF CITIES
       //-----------------------------END DRAW CONTROLS---------------------------------------
   
       //make teh nav and city buttons---------------|<>o|----thhppt---------City buttons Y'All!
-
-    let page_title = "Map your Community Groups Wetland";
-    $('<a class="navbar-brand" href="#" target="_blank">'+page_title+'</a>').click(function(e){
-      e.preventDefault();
-      $('#aboutModal').modal('show');
-    }).prependTo('#navDiv');
     
     //add listeners------------------------------------------------------------------------------------------------------LIsteners Y'All!
     $('#aboutModal').modal('show').on('hidden.bs.modal',function(){
@@ -357,13 +374,13 @@ var myCities = [  //NAME AND BOUNDS OF CITIES
     function add_wetland(){
       //CHECK IF community group has a name
       if (!notEmptyText(document.getElementById('hoodName'))){
-        alert('Please enter a Community group name, thanks!');  
+        alert('Please enter a Community group name, thanks.');  
         return false;
       }; 
       
       //CHECK IF wetland has a name
       if (!notEmptyText(document.getElementById('wetlandName'))){
-        alert('Please enter a name for the wetland you drew, thanks!');  
+        alert('Please enter a name for the wetland you drew, thanks.');  
         return false;
       }; 
 
@@ -619,13 +636,13 @@ var myCities = [  //NAME AND BOUNDS OF CITIES
     instructed[geomType] = true;
     if ( geomType == "poly" ){
       var action = L.Browser.touch ? 'tap' : 'click';
-      var title = 'Looking good!',
+      var title = 'Looking good',
         text = 'You can now adjust the shape of the wetland. Drag the white squares to change the shape, or ' + action + ' them to delete corners. Press <b>Save Boundary</b> to continue.',
         src = 'img/new_instructions_3.gif';
       showAlert( title, text, src );
     } else {
       if ( L.Browser.touch ) return;
-      var title = 'Looking good!',
+      var title = 'Looking good',
         text = 'You can click and drag the marker to edit its location. When you are satisfied, press <b>Save Focal Point</b>.',
         src = 'img/new_instructions_5.gif';
       showAlert( title, text, src );
