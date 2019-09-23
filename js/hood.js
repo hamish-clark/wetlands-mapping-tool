@@ -8,7 +8,7 @@ var myCities = [  //NAME AND BOUNDS OF CITIES
 carto_table_name = "wetlands" // cartoDB table name
 carto_username = "bentleyshannon" // your cartoDB username
 
-carto_apikey = "" // Enter Carto API key here.
+carto_apikey = "04bd88fcef51e627812d6192dfa508ba73f85e2e" // Enter Carto API key here.
 
   ,brandText = "Welly's Neighbourhoods: Have your say!" // top left text and link on site
   ,brandLink = "https://www.wellyhoods.com" //top left link on site
